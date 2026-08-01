@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>記帳存摺</title>
+
+<!-- iOS 加入主畫面設定 -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="記帳存摺">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1F3A34">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink-green:#1F3A34;
+    --ink-green-deep:#142722;
+    --paper:#F7F1E1;
+    --paper-soft:#FBF7EC;
+    --paper-line:#E4D9BC;
+    --brass:#B08D57;
+    --brass-soft:#D8C39B;
+    --seal-red:#B23B3B;
+    --ink-text:#26261F;
+    --muted:#8A8067;
+    --radius:18px;
+    font-size:16px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink-green-deep);
+    color:var(--ink-text);
+    font-family:'Noto Sans TC',sans-serif;
+    min-height:100vh;
+    padding-bottom:calc(48px + env(safe-area-inset-bottom));
+  }
+  .display{font-family:'Noto Serif TC',serif;}
+  .mono{font-family:'Roboto Mono',monospace;}
+
+  /* ---------- Hero passbook cover ---------- */
+  .hero{
+    background:
+      radial-gradient(circle at 85% -10%, rgba(176,141,87,.25), transparent 55%),
+      linear-gradient(180deg,var(--ink-green) 0%, var(--ink-green-deep) 100%);
+    padding:calc(28px + env(safe-area-inset-top)) 20px 34px;
+    position:relative;
+    overflow:hidden;
+    border-bottom:1px solid rgba(216,195,155,.35);
+  }
+  .hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:repeating-linear-gradient(rgba(255,255,255,.035) 0 1px, transparent 1px 34px);
+    pointer-events:none;
+  }
+  .hero-top{display:flex; align-items:center; justify-content:space-between; position:relative; z-index:1;}
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand-mark{
+    width:30px;height:30px;border:1.5px solid var(--brass);border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--brass); font-size:15px;
+  }
+  .brand-name{color:var(--paper); letter-spacing:.06em; font-weight:700; font-size:15px;}
+  .brand-sub{color:var(--brass-soft); font-size:11px; letter-spacing:.18em;}
+
+  .seal{
+    width:52px;height:52px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #c94848, var(--seal-red) 70%);
+    border:1.5px solid rgba(247,241,225,.5);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--paper); font-size:11px; text-align:center; line-height:1.2;
+    transform:rotate(-8deg);
+    box-shadow:0 4px 10px rgba(0,0,0,.35);
+    font-family:'Noto Serif TC',serif; font-weight:700;
+    flex-shrink:0;
+  }
+
+  .balance-block{margin-top:26px; position:relative; z-index:1;}
+  .balance-label{color:var(--brass-soft); font-size:12px; letter-spacing:.14em; margin-bottom:6px;}
+  .balance-value{color:var(--paper); font-size:40px; font-weight:900; line-height:1;}
+  .balance-value.neg{color:#E39A9A;}
+  .month-picker{
+    margin-top:4px; background:none; border:none; color:var(--brass-soft);
+    font-family:'Noto Sans TC',sans-serif; font-size:12.5px; letter-spacing:.04em;
+    padding:0; -webkit-appearance:none; appearance:none;
+  }
+  .month-picker option{color:#000;}
+
+  .sub-stats{
+    display:flex; gap:10px; margin-top:18px; position:relative; z-index:1;
+  }
+  .stat-card{
+    flex:1; background:rgba(247,241,225,.08);
+    border:1px solid rgba(216,195,155,.3);
+    border-radius:12px; padding:10px 12px;
+  }
+  .stat-label{color:var(--brass-soft); font-size:11px; letter-spacing:.08em;}
+  .stat-value{color:var(--paper); font-size:18px; font-weight:700; margin-top:3px;}
+  .stat-value.income{color:#9FD8B8;}
+  .stat-value.expense{color:#E39A9A;}
+
+  /* ---------- Sheet (main content) ---------- */
+  .sheet{
+    background:var(--paper);
+    border-radius:22px 22px 0 0;
+    margin-top:-16px;
+    position:relative;
+    padding:22px 18px 10px;
+    min-height:60vh;
+  }
+  .section-title{
+    font-family:'Noto Serif TC',serif; font-weight:700; font-size:15px;
+    color:var(--ink-green); margin:0 0 12px 2px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .section-title::before{
+    content:""; width:4px; height:14px; background:var(--seal-red); border-radius:2px; display:inline-block;
+  }
+
+  /* ---------- Type toggle ---------- */
+  .type-toggle{ display:flex; gap:10px; margin-bottom:14px; }
+  .type-btn{
+    flex:1; padding:11px 0; text-align:center; border-radius:12px;
+    border:1.5px solid var(--paper-line); background:var(--paper-soft);
+    color:var(--muted); font-weight:700; font-size:14px; letter-spacing:.04em;
+    font-family:'Noto Sans TC',sans-serif;
+  }
+  .type-btn.active-expense{ background:var(--seal-red); border-color:var(--seal-red); color:var(--paper); }
+  .type-btn.active-income{ background:var(--ink-green); border-color:var(--ink-green); color:var(--paper); }
+
+  /* ---------- Form ---------- */
+  .form-card{
+    background:var(--paper-soft); border:1px solid var(--paper-line);
+    border-radius:var(--radius); padding:16px; margin-bottom:26px;
+  }
+  .field{ margin-bottom:12px; }
+  .field label{
+    display:block; font-size:11.5px; color:var(--muted); letter-spacing:.06em; margin-bottom:5px;
+  }
+  .field input, .field textarea, .field select{
+    width:100%; border:1px solid var(--paper-line); background:#fff;
+    border-radius:10px; padding:10px 12px; font-size:15px; color:var(--ink-text);
+    font-family:'Noto Sans TC',sans-serif;
+  }
+  .field input.amount{ font-family:'Roboto Mono',monospace; font-size:20px; font-weight:700; }
+  .row-2{ display:flex; gap:10px; }
+  .row-2 .field{ flex:1; }
+
+  .chip-group{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:6px; }
+  .chip{
+    border:1.5px solid var(--paper-line); background:#fff; border-radius:999px;
+    padding:7px 12px; font-size:13px; color:var(--ink-text); display:flex; align-items:center; gap:5px;
+  }
+  .chip.selected{ border-color:var(--brass); background:rgba(176,141,87,.16); font-weight:700; }
+
+  .submit-btn{
+    width:100%; margin-top:6px; border:none; border-radius:12px; padding:14px 0;
+    background:var(--ink-green); color:var(--paper); font-weight:700; font-size:15px;
+    letter-spacing:.06em; font-family:'Noto Serif TC',serif;
+  }
+  .submit-btn:active{ opacity:.85; }
+  .status-line{ font-size:12px; color:var(--muted); margin-top:8px; min-height:16px; text-align:center; }
+
+  /* ---------- Ledger list ---------- */
+  .ledger{
+    background:var(--paper-soft); border:1px solid var(--paper-line); border-radius:var(--radius);
+    overflow:hidden; margin-bottom:22px;
+  }
+  .ledger-row{
+    display:flex; align-items:center; gap:10px; padding:13px 14px;
+    border-bottom:1px dashed var(--paper-line);
+  }
+  .ledger-row:last-child{ border-bottom:none; }
+  .ledger-date{
+    width:40px; flex-shrink:0; text-align:center; font-family:'Roboto Mono',monospace;
+    color:var(--muted); font-size:12px; line-height:1.25;
+  }
+  .ledger-date b{ display:block; font-size:16px; color:var(--ink-text); }
+  .ledger-main{ flex:1; min-width:0; }
+  .ledger-cat{ font-size:12.5px; color:var(--brass); font-weight:700; }
+  .ledger-item{ font-size:14.5px; color:var(--ink-text); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .ledger-note{ font-size:11.5px; color:var(--muted); margin-top:1px; }
+  .ledger-amount{
+    font-family:'Roboto Mono',monospace; font-weight:700; font-size:15.5px; flex-shrink:0;
+  }
+  .ledger-amount.expense{ color:var(--seal-red); }
+  .ledger-amount.income{ color:var(--ink-green); }
+  .ledger-pending{ opacity:.5; font-style:italic; }
+  .empty-state{ padding:36px 20px; text-align:center; color:var(--muted); font-size:13.5px; line-height:1.7; }
+
+  /* ---------- Settings ---------- */
+  .settings-card{
+    background:var(--paper-soft); border:1px solid var(--paper-line); border-radius:var(--radius);
+    padding:16px; margin-bottom:20px;
+  }
+  .settings-card .field input{ font-family:'Roboto Mono',monospace; font-size:12.5px; }
+  .settings-btns{ display:flex; gap:8px; }
+  .btn-outline{
+    flex:1; padding:11px 0; border-radius:10px; border:1.5px solid var(--ink-green);
+    background:none; color:var(--ink-green); font-weight:700; font-size:13.5px;
+    font-family:'Noto Sans TC',sans-serif;
+  }
+  .conn-dot{ display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--muted); margin-right:6px; }
+  .conn-dot.ok{ background:#3F8F5F; }
+  .conn-dot.err{ background:var(--seal-red); }
+  .helper-text{ font-size:11.5px; color:var(--muted); line-height:1.6; margin-top:8px; }
+  .helper-text a{ color:var(--brass); }
+
+  footer{ text-align:center; color:var(--muted); font-size:11px; padding:10px 0 4px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-top">
+    <div class="brand">
+      <div class="brand-mark">冊</div>
+      <div>
+        <div class="brand-name">記帳存摺</div>
+        <div class="brand-sub" id="todayLabel">－</div>
+      </div>
+    </div>
+    <div class="seal" id="sealStamp">－</div>
+  </div>
+
+  <div class="balance-block">
+    <div class="balance-label">本月結餘</div>
+    <div class="balance-value display" id="balanceValue">$0</div>
+    <select class="month-picker" id="monthPicker"></select>
+  </div>
+
+  <div class="sub-stats">
+    <div class="stat-card">
+      <div class="stat-label">本月收入</div>
+      <div class="stat-value income mono" id="incomeValue">$0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">本月支出</div>
+      <div class="stat-value expense mono" id="expenseValue">$0</div>
+    </div>
+  </div>
+</div>
+
+<div class="sheet">
+
+  <div class="section-title">記一筆</div>
+  <div class="form-card">
+    <div class="type-toggle">
+      <button type="button" class="type-btn active-expense" id="btnExpense">支出</button>
+      <button type="button" class="type-btn" id="btnIncome">收入</button>
+    </div>
+
+    <div class="row-2">
+      <div class="field">
+        <label>日期</label>
+        <input type="date" id="fDate">
+      </div>
+      <div class="field">
+        <label>金額</label>
+        <input type="number" inputmode="decimal" class="amount mono" id="fAmount" placeholder="0">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>類別</label>
+      <div class="chip-group" id="categoryChips"></div>
+    </div>
+
+    <div class="field">
+      <label>項目</label>
+      <input type="text" id="fItem" placeholder="例如：午餐、捷運、薪水">
+    </div>
+
+    <div class="field">
+      <label>備註（選填）</label>
+      <input type="text" id="fNote" placeholder="">
+    </div>
+
+    <button class="submit-btn" id="submitBtn">記一筆</button>
+    <div class="status-line" id="statusLine"></div>
+  </div>
+
+  <div class="section-title">明細</div>
+  <div class="ledger" id="ledgerList">
+    <div class="empty-state">還沒有任何記錄，先在上面新增一筆吧。</div>
+  </div>
+
+  <div class="section-title">設定</div>
+  <div class="settings-card">
+    <div class="field">
+      <label><span class="conn-dot" id="connDot"></span>Google 試算表連結網址（Apps Script 網頁應用程式）</label>
+      <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/xxxx/exec">
+    </div>
+    <div class="settings-btns">
+      <button class="btn-outline" id="saveUrlBtn">儲存</button>
+      <button class="btn-outline" id="testUrlBtn">測試連線</button>
+    </div>
+    <div class="helper-text" id="connStatusText">尚未設定。請參考 README 建立 Google Sheet 並取得網址。</div>
+  </div>
+
+  <footer>記帳存摺 · 資料儲存於你自己的 Google 試算表</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var CATS = {
+    expense: [
+      {k:'飲食', e:'🍜'}, {k:'交通', e:'🚌'}, {k:'購物', e:'🛍️'}, {k:'娛樂', e:'🎬'},
+      {k:'居住', e:'🏠'}, {k:'醫療', e:'💊'}, {k:'教育', e:'📚'}, {k:'其他', e:'🗂️'}
+    ],
+    income: [
+      {k:'薪資', e:'💰'}, {k:'獎金', e:'🎁'}, {k:'投資', e:'📈'}, {k:'其他收入', e:'✨'}
+    ]
+  };
+
+  var state = {
+    type: 'expense',
+    category: CATS.expense[0].k,
+    entries: [],       // synced from sheet
+    pending: [],       // queued locally, not yet confirmed synced
+    scriptUrl: localStorage.getItem('ledger_script_url') || '',
+    month: null         // 'YYYY-MM'
+  };
+
+  // ---------- helpers ----------
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function todayISO(){
+    var d = new Date();
+    return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  }
+  function fmtMoney(n){
+    n = Math.round(Number(n)||0);
+    return (n<0?'-$':'$') + Math.abs(n).toLocaleString('zh-Hant-TW');
+  }
+  function uid(){ return 'e' + Date.now() + Math.random().toString(36).slice(2,7); }
+
+  // ---------- header ----------
+  function renderHeader(){
+    var d = new Date();
+    var weekday = ['日','一','二','三','四','五','六'][d.getDay()];
+    document.getElementById('todayLabel').textContent =
+      d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 星期'+weekday;
+    document.getElementById('sealStamp').innerHTML = (d.getMonth()+1)+'月<br>'+d.getDate()+'日';
+  }
+
+  // ---------- categories ----------
+  function renderCategoryChips(){
+    var wrap = document.getElementById('categoryChips');
+    wrap.innerHTML = '';
+    CATS[state.type].forEach(function(c){
+      var chip = document.createElement('div');
+      chip.className = 'chip' + (state.category===c.k ? ' selected':'');
+      chip.innerHTML = '<span>'+c.e+'</span><span>'+c.k+'</span>';
+      chip.onclick = function(){
+        state.category = c.k;
+        renderCategoryChips();
+      };
+      wrap.appendChild(chip);
+    });
+  }
+
+  function setType(t){
+    state.type = t;
+    state.category = CATS[t][0].k;
+    document.getElementById('btnExpense').className = 'type-btn' + (t==='expense' ? ' active-expense':'');
+    document.getElementById('btnIncome').className = 'type-btn' + (t==='income' ? ' active-income':'');
+    renderCategoryChips();
+  }
+
+  // ---------- month picker ----------
+  function allMonthsFromEntries(){
+    var set = {};
+    set[todayISO().slice(0,7)] = true;
+    state.entries.concat(state.pending).forEach(function(e){
+      if(e.date) set[e.date.slice(0,7)] = true;
+    });
+    return Object.keys(set).sort().reverse();
+  }
+  function renderMonthPicker(){
+    var sel = document.getElementById('monthPicker');
+    var months = allMonthsFromEntries();
+    if(!state.month) state.month = months[0];
+    sel.innerHTML = months.map(function(m){
+      var parts = m.split('-');
+      var label = parts[0]+'年'+parseInt(parts[1],10)+'月';
+      return '<option value="'+m+'"'+(m===state.month?' selected':'')+'>'+label+'</option>';
+    }).join('');
+    sel.onchange = function(){ state.month = sel.value; renderAll(); };
+  }
+
+  // ---------- summary + list ----------
+  function combinedEntries(){
+    return state.entries.concat(state.pending);
+  }
+  function renderSummary(){
+    var list = combinedEntries().filter(function(e){ return e.date && e.date.slice(0,7)===state.month; });
+    var income=0, expense=0;
+    list.forEach(function(e){
+      var amt = Number(e.amount)||0;
+      if(e.type==='income') income += amt; else expense += amt;
+    });
+    var balance = income - expense;
+    var bEl = document.getElementById('balanceValue');
+    bEl.textContent = fmtMoney(balance);
+    bEl.className = 'balance-value display' + (balance<0 ? ' neg':'');
+    document.getElementById('incomeValue').textContent = fmtMoney(income);
+    document.getElementById('expenseValue').textContent = fmtMoney(-expense);
+  }
+  function renderList(){
+    var list = combinedEntries()
+      .filter(function(e){ return e.date && e.date.slice(0,7)===state.month; })
+      .sort(function(a,b){ return (b.date+b.id) > (a.date+a.id) ? 1 : -1; });
+
+    var wrap = document.getElementById('ledgerList');
+    if(list.length===0){
+      wrap.innerHTML = '<div class="empty-state">這個月還沒有記錄，記一筆開始你的存摺吧。</div>';
+      return;
+    }
+    wrap.innerHTML = list.map(function(e){
+      var d = e.date.split('-');
+      var isExpense = e.type!=='income';
+      return '' +
+        '<div class="ledger-row'+(e.pending?' ledger-pending':'')+'">' +
+          '<div class="ledger-date">'+d[1]+'/<b>'+d[2]+'</b></div>' +
+          '<div class="ledger-main">' +
+            '<div class="ledger-cat">'+(e.category||'')+(e.pending?'（同步中）':'')+'</div>' +
+            '<div class="ledger-item">'+(e.item||'')+'</div>' +
+            (e.note ? '<div class="ledger-note">'+e.note+'</div>' : '') +
+          '</div>' +
+          '<div class="ledger-amount '+(isExpense?'expense':'income')+' mono">'+
+            (isExpense?'-':'+')+fmtMoney(Math.abs(e.amount)).replace('$','$')+
+          '</div>' +
+        '</div>';
+    }).join('');
+  }
+  function renderAll(){
+    renderMonthPicker();
+    renderSummary();
+    renderList();
+  }
+
+  // ---------- persistence (local cache) ----------
+  function saveCache(){
+    localStorage.setItem('ledger_entries_cache', JSON.stringify(state.entries));
+    localStorage.setItem('ledger_pending_cache', JSON.stringify(state.pending));
+  }
+  function loadCache(){
+    try{ state.entries = JSON.parse(localStorage.getItem('ledger_entries_cache')||'[]'); }catch(e){ state.entries=[]; }
+    try{ state.pending = JSON.parse(localStorage.getItem('ledger_pending_cache')||'[]'); }catch(e){ state.pending=[]; }
+  }
+
+  // ---------- Google Sheet sync ----------
+  function setConn(status, text){
+    var dot = document.getElementById('connDot');
+    dot.className = 'conn-dot' + (status ? ' '+status : '');
+    document.getElementById('connStatusText').textContent = text;
+  }
+
+  function loadFromSheet(){
+    if(!state.scriptUrl){ setConn('', '尚未設定連結網址。'); return; }
+    setConn('', '同步中…');
+    fetch(state.scriptUrl + '?action=list')
+      .then(function(r){ return r.json(); })
+      .then(function(res){
+        if(res && res.ok){
+          state.entries = (res.data||[]).map(function(row){
+            return {
+              date: row['日期'], type: row['收支']==='收入'?'income':'expense',
+              category: row['類別'], item: row['項目'], amount: Number(row['金額'])||0,
+              note: row['備註'], id: row['ID']
+            };
+          });
+          saveCache();
+          setConn('ok', '已連線，資料同步自你的 Google 試算表。');
+          renderAll();
+        } else {
+          setConn('err', '連線成功但回傳格式異常，請檢查 Apps Script 程式碼。');
+        }
+      })
+      .catch(function(){
+        setConn('err', '無法連線，請確認網址正確，且部署權限為「任何人」。');
+      });
+  }
+
+  function trySyncPending(){
+    if(!state.scriptUrl || state.pending.length===0) return;
+    var queue = state.pending.slice();
+    queue.forEach(function(entry){
+      fetch(state.scriptUrl, {
+        method:'POST',
+        headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify({
+          date: entry.date, type: entry.type==='income'?'收入':'支出',
+          category: entry.category, item: entry.item, amount: entry.amount,
+          note: entry.note||'', id: entry.id
+        })
+      }).then(function(r){ return r.json(); })
+        .then(function(res){
+          if(res && res.ok){
+            state.pending = state.pending.filter(function(p){ return p.id!==entry.id; });
+            saveCache();
+            loadFromSheet();
+          }
+        }).catch(function(){ /* stay pending, retry later */ });
+    });
+  }
+
+  // ---------- form submit ----------
+  document.getElementById('btnExpense').onclick = function(){ setType('expense'); };
+  document.getElementById('btnIncome').onclick = function(){ setType('income'); };
+
+  document.getElementById('submitBtn').onclick = function(){
+    var date = document.getElementById('fDate').value || todayISO();
+    var amount = Number(document.getElementById('fAmount').value);
+    var item = document.getElementById('fItem').value.trim();
+    var note = document.getElementById('fNote').value.trim();
+    var statusLine = document.getElementById('statusLine');
+
+    if(!amount || amount<=0){ statusLine.textContent='請輸入正確的金額。'; return; }
+    if(!item){ statusLine.textContent='請輸入項目名稱。'; return; }
+
+    var entry = {
+      date: date, type: state.type, category: state.category,
+      item: item, amount: amount, note: note, id: uid(), pending: true
+    };
+    state.pending.push(entry);
+    saveCache();
+    renderAll();
+
+    document.getElementById('fAmount').value='';
+    document.getElementById('fItem').value='';
+    document.getElementById('fNote').value='';
+    statusLine.textContent = '已加入！' + (state.scriptUrl ? '正在同步到試算表…' : '尚未設定 Google 試算表，先暫存在裝置上。');
+
+    if(state.scriptUrl){ trySyncPending(); }
+  };
+
+  // ---------- settings ----------
+  document.getElementById('scriptUrl').value = state.scriptUrl;
+  document.getElementById('saveUrlBtn').onclick = function(){
+    var url = document.getElementById('scriptUrl').value.trim();
+    state.scriptUrl = url;
+    localStorage.setItem('ledger_script_url', url);
+    setConn('', '已儲存，正在測試連線…');
+    loadFromSheet();
+  };
+  document.getElementById('testUrlBtn').onclick = function(){
+    loadFromSheet();
+  };
+
+  // ---------- init ----------
+  document.getElementById('fDate').value = todayISO();
+  renderHeader();
+  loadCache();
+  renderCategoryChips();
+  renderAll();
+  if(state.scriptUrl){ loadFromSheet(); setTimeout(trySyncPending, 800); }
+
+  window.addEventListener('online', trySyncPending);
+
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  }
+})();
+</script>
+</body>
+</html>
