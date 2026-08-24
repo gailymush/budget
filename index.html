@@ -336,7 +336,7 @@
         </div>
         <div class="field">
           <label>金額</label>
-          <input type="number" inputmode="decimal" class="amount mono" id="fAmount" placeholder="0">
+          <input type="number" inputmode="decimal" step="0.01" min="0" class="amount mono" id="fAmount" placeholder="0.00">
         </div>
       </div>
 
@@ -459,8 +459,9 @@
     return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
   }
   function fmtMoney(n){
-    n = Math.round(Number(n)||0);
-    return (n<0?'-$':'$') + Math.abs(n).toLocaleString('zh-Hant-TW');
+    n = Number(n)||0;
+    var fixed = Math.abs(n).toLocaleString('zh-Hant-TW', { minimumFractionDigits:2, maximumFractionDigits:2 });
+    return (n<0?'-$':'$') + fixed;
   }
   function uid(){ return 'e' + Date.now() + Math.random().toString(36).slice(2,7); }
 
