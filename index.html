@@ -214,6 +214,70 @@
   .helper-text a{ color:var(--brass); }
 
   footer{ text-align:center; color:var(--muted); font-size:11px; padding:10px 0 4px; }
+
+  /* ---------- Tabs ---------- */
+  .tab-bar{
+    display:flex; gap:6px; margin:-4px 0 20px; position:sticky; top:0;
+    background:var(--paper); padding-top:6px; padding-bottom:2px; z-index:5;
+  }
+  .tab-btn{
+    flex:1; text-align:center; padding:10px 0; border-radius:12px;
+    border:1.5px solid var(--paper-line); background:var(--paper-soft);
+    color:var(--muted); font-weight:700; font-size:13px; letter-spacing:.02em;
+    font-family:'Noto Sans TC',sans-serif;
+  }
+  .tab-btn.active{ background:var(--ink-green); border-color:var(--ink-green); color:var(--paper); }
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; }
+
+  /* ---------- Saving rate card ---------- */
+  .save-card{
+    background:linear-gradient(155deg,var(--ink-green),var(--ink-green-deep));
+    border-radius:var(--radius); padding:20px 18px; margin-bottom:22px; color:var(--paper);
+  }
+  .save-label{ font-size:11.5px; color:var(--brass-soft); letter-spacing:.12em; }
+  .save-rate{ font-size:38px; font-weight:900; font-family:'Noto Serif TC',serif; margin-top:4px; line-height:1; }
+  .save-rate.neg{ color:#E39A9A; }
+  .save-sub{ display:flex; gap:22px; margin-top:14px; }
+  .save-sub div{ font-size:11px; color:var(--brass-soft); }
+  .save-sub b{ display:block; color:var(--paper); font-size:14.5px; font-family:'Roboto Mono',monospace; margin-top:3px; font-weight:700; }
+
+  /* ---------- Budget cap cards ---------- */
+  .cap-card{
+    background:var(--paper-soft); border:1px solid var(--paper-line); border-radius:var(--radius);
+    padding:14px 16px; margin-bottom:12px;
+  }
+  .cap-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:9px; }
+  .cap-cat{ font-weight:700; font-size:14px; color:var(--ink-text); display:flex; align-items:center; gap:7px; }
+  .cap-dot{ width:9px; height:9px; border-radius:50%; display:inline-block; flex-shrink:0; }
+  .cap-amounts{ font-family:'Roboto Mono',monospace; font-size:12px; color:var(--muted); }
+  .cap-bar-track{ height:8px; border-radius:6px; background:var(--paper-line); overflow:hidden; }
+  .cap-bar-fill{ height:100%; border-radius:6px; }
+  .cap-remain{ margin-top:7px; font-size:12px; color:var(--muted); }
+  .cap-remain.over{ color:var(--seal-red); font-weight:700; }
+  .cap-month-label{ font-size:12px; color:var(--muted); margin:-6px 0 16px 2px; }
+
+  /* ---------- Summary / donut ---------- */
+  .period-toggle{ display:flex; gap:10px; margin-bottom:18px; }
+  .donut-outer{ position:relative; width:168px; height:168px; margin:4px auto 22px; }
+  .donut{ position:absolute; inset:0; border-radius:50%; }
+  .donut-hole{
+    position:absolute; inset:28px; border-radius:50%; background:var(--paper);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    box-shadow:inset 0 0 0 1px var(--paper-line);
+  }
+  .donut-hole-value{ font-family:'Roboto Mono',monospace; font-weight:700; font-size:16.5px; color:var(--ink-text); }
+  .donut-hole-label{ font-size:10.5px; color:var(--muted); margin-top:2px; }
+  .legend-card{
+    background:var(--paper-soft); border:1px solid var(--paper-line); border-radius:var(--radius);
+    padding:6px 16px; margin-bottom:20px;
+  }
+  .legend-row{ display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px dashed var(--paper-line); }
+  .legend-row:last-child{ border-bottom:none; }
+  .legend-dot{ width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .legend-name{ flex:1; font-size:13.5px; color:var(--ink-text); }
+  .legend-amt{ font-family:'Roboto Mono',monospace; font-size:13px; color:var(--ink-text); font-weight:700; }
+  .legend-pct{ font-size:11.5px; color:var(--muted); width:40px; text-align:right; flex-shrink:0; }
 </style>
 </head>
 <body>
@@ -250,59 +314,101 @@
 
 <div class="sheet">
 
-  <div class="section-title">記一筆</div>
-  <div class="form-card">
-    <div class="type-toggle">
-      <button type="button" class="type-btn active-expense" id="btnExpense">支出</button>
-      <button type="button" class="type-btn" id="btnIncome">收入</button>
-    </div>
-
-    <div class="row-2">
-      <div class="field">
-        <label>日期</label>
-        <input type="date" id="fDate">
-      </div>
-      <div class="field">
-        <label>金額</label>
-        <input type="number" inputmode="decimal" class="amount mono" id="fAmount" placeholder="0">
-      </div>
-    </div>
-
-    <div class="field">
-      <label>類別</label>
-      <div class="chip-group" id="categoryChips"></div>
-    </div>
-
-    <div class="field">
-      <label>項目</label>
-      <input type="text" id="fItem" placeholder="例如：午餐、捷運、薪水">
-    </div>
-
-    <div class="field">
-      <label>備註（選填）</label>
-      <input type="text" id="fNote" placeholder="">
-    </div>
-
-    <button class="submit-btn" id="submitBtn">記一筆</button>
-    <div class="status-line" id="statusLine"></div>
+  <div class="tab-bar">
+    <button type="button" class="tab-btn active" id="tabBtnRecord">記帳</button>
+    <button type="button" class="tab-btn" id="tabBtnBudget">預算上限</button>
+    <button type="button" class="tab-btn" id="tabBtnSummary">分類總覽</button>
   </div>
 
-  <div class="section-title">明細</div>
-  <div class="ledger" id="ledgerList">
-    <div class="empty-state">還沒有任何記錄，先在上面新增一筆吧。</div>
+  <div class="tab-panel active" id="panelRecord">
+
+    <div class="section-title">記一筆</div>
+    <div class="form-card">
+      <div class="type-toggle">
+        <button type="button" class="type-btn active-expense" id="btnExpense">支出</button>
+        <button type="button" class="type-btn" id="btnIncome">收入</button>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label>日期</label>
+          <input type="date" id="fDate">
+        </div>
+        <div class="field">
+          <label>金額</label>
+          <input type="number" inputmode="decimal" class="amount mono" id="fAmount" placeholder="0">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>類別</label>
+        <div class="chip-group" id="categoryChips"></div>
+      </div>
+
+      <div class="field">
+        <label>項目</label>
+        <input type="text" id="fItem" placeholder="例如：午餐、捷運、薪水">
+      </div>
+
+      <div class="field">
+        <label>備註（選填）</label>
+        <input type="text" id="fNote" placeholder="">
+      </div>
+
+      <button class="submit-btn" id="submitBtn">記一筆</button>
+      <div class="status-line" id="statusLine"></div>
+    </div>
+
+    <div class="section-title">明細</div>
+    <div class="ledger" id="ledgerList">
+      <div class="empty-state">還沒有任何記錄，先在上面新增一筆吧。</div>
+    </div>
+
+    <div class="section-title">設定</div>
+    <div class="settings-card">
+      <div class="field">
+        <label><span class="conn-dot" id="connDot"></span>Google 試算表連結網址（Apps Script 網頁應用程式）</label>
+        <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/xxxx/exec">
+      </div>
+      <div class="settings-btns">
+        <button class="btn-outline" id="saveUrlBtn">儲存</button>
+        <button class="btn-outline" id="testUrlBtn">測試連線</button>
+      </div>
+      <div class="helper-text" id="connStatusText">尚未設定。請參考 README 建立 Google Sheet 並取得網址。</div>
+    </div>
   </div>
 
-  <div class="section-title">設定</div>
-  <div class="settings-card">
-    <div class="field">
-      <label><span class="conn-dot" id="connDot"></span>Google 試算表連結網址（Apps Script 網頁應用程式）</label>
-      <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/xxxx/exec">
+  <div class="tab-panel" id="panelBudget">
+    <div class="section-title">儲蓄率</div>
+    <div class="cap-month-label" id="budgetMonthLabel">－</div>
+    <div class="save-card">
+      <div class="save-label">本月儲蓄率（淨儲蓄 ÷ 收入）</div>
+      <div class="save-rate display" id="saveRateValue">－</div>
+      <div class="save-sub">
+        <div>收入<b id="saveIncome">$0</b></div>
+        <div>支出<b id="saveExpense">$0</b></div>
+        <div>淨儲蓄<b id="saveNet">$0</b></div>
+      </div>
     </div>
-    <div class="settings-btns">
-      <button class="btn-outline" id="saveUrlBtn">儲存</button>
-      <button class="btn-outline" id="testUrlBtn">測試連線</button>
+
+    <div class="section-title">每月預算上限</div>
+    <div id="capCards"></div>
+  </div>
+
+  <div class="tab-panel" id="panelSummary">
+    <div class="section-title">支出分類總覽</div>
+    <div class="period-toggle">
+      <button type="button" class="type-btn active-expense" id="btnPeriodMonth">本月</button>
+      <button type="button" class="type-btn" id="btnPeriodYear">本年</button>
     </div>
-    <div class="helper-text" id="connStatusText">尚未設定。請參考 README 建立 Google Sheet 並取得網址。</div>
+    <div class="donut-outer">
+      <div class="donut" id="donutChart"></div>
+      <div class="donut-hole">
+        <div class="donut-hole-value" id="donutTotalValue">$0</div>
+        <div class="donut-hole-label" id="donutTotalLabel">總支出</div>
+      </div>
+    </div>
+    <div class="legend-card" id="legendList"></div>
   </div>
 
   <footer>記帳存摺 · 資料儲存於你自己的 Google 試算表</footer>
@@ -328,8 +434,23 @@
     entries: [],       // synced from sheet
     pending: [],       // queued locally, not yet confirmed synced
     scriptUrl: localStorage.getItem('ledger_script_url') || '',
-    month: null         // 'YYYY-MM'
+    month: null,        // 'YYYY-MM'
+    summaryPeriod: 'month'  // 'month' | 'year'
   };
+
+  // ---------- budget caps ----------
+  var BUDGET_CAPS = {
+    '飲食': 900,
+    '教育': 1250,
+    '娛樂': 1400,
+    '交通': 400,
+    '購物': 250
+  };
+  var CAT_COLORS = {
+    '飲食': '#D97757', '交通': '#4C8C8B', '購物': '#B08D57', '娛樂': '#7C6BA6',
+    '居住': '#5B8266', '醫療': '#C25B5B', '教育': '#3E7C8C', '其他': '#9B9481'
+  };
+  function catColor(cat){ return CAT_COLORS[cat] || '#8A8067'; }
 
   // ---------- helpers ----------
   function pad(n){ return String(n).padStart(2,'0'); }
@@ -446,6 +567,121 @@
     renderMonthPicker();
     renderSummary();
     renderList();
+    renderBudgetTab();
+    renderSummaryTab();
+  }
+
+  // ---------- budget cap tab ----------
+  function renderBudgetTab(){
+    if(!state.month) return;
+    var parts = state.month.split('-');
+    document.getElementById('budgetMonthLabel').textContent = parts[0]+'年'+parseInt(parts[1],10)+'月 預算狀況';
+
+    var list = combinedEntries().filter(function(e){ return e.date && e.date.slice(0,7)===state.month; });
+    var income=0, expense=0;
+    list.forEach(function(e){
+      var amt = Number(e.amount)||0;
+      if(e.type==='income') income += amt; else expense += amt;
+    });
+    var net = income - expense;
+    var rateEl = document.getElementById('saveRateValue');
+    if(income>0){
+      var rate = (net/income)*100;
+      rateEl.textContent = (rate>=0?'':'') + rate.toFixed(1) + '%';
+      rateEl.className = 'save-rate display' + (rate<0 ? ' neg':'');
+    } else {
+      rateEl.textContent = '－';
+      rateEl.className = 'save-rate display';
+    }
+    document.getElementById('saveIncome').textContent = fmtMoney(income);
+    document.getElementById('saveExpense').textContent = fmtMoney(expense);
+    document.getElementById('saveNet').textContent = fmtMoney(net);
+
+    var spentByCat = {};
+    list.forEach(function(e){
+      if(e.type==='income') return;
+      spentByCat[e.category] = (spentByCat[e.category]||0) + (Number(e.amount)||0);
+    });
+
+    var wrap = document.getElementById('capCards');
+    wrap.innerHTML = Object.keys(BUDGET_CAPS).map(function(cat){
+      var cap = BUDGET_CAPS[cat];
+      var spent = spentByCat[cat] || 0;
+      var remain = cap - spent;
+      var pct = Math.min(100, (spent/cap)*100);
+      var over = spent > cap;
+      return '' +
+        '<div class="cap-card">' +
+          '<div class="cap-head">' +
+            '<div class="cap-cat"><span class="cap-dot" style="background:'+catColor(cat)+'"></span>'+cat+'</div>' +
+            '<div class="cap-amounts">'+fmtMoney(spent)+' / '+fmtMoney(cap)+'</div>' +
+          '</div>' +
+          '<div class="cap-bar-track"><div class="cap-bar-fill" style="width:'+pct+'%; background:'+(over?'#B23B3B':catColor(cat))+'"></div></div>' +
+          '<div class="cap-remain'+(over?' over':'')+'">' +
+            (over ? '已超支 '+fmtMoney(spent-cap) : '本月還可花 '+fmtMoney(remain)) +
+          '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  // ---------- summary / donut tab ----------
+  function setSummaryPeriod(p){
+    state.summaryPeriod = p;
+    document.getElementById('btnPeriodMonth').className = 'type-btn' + (p==='month' ? ' active-expense':'');
+    document.getElementById('btnPeriodYear').className = 'type-btn' + (p==='year' ? ' active-expense':'');
+    renderSummaryTab();
+  }
+
+  function renderSummaryTab(){
+    if(!state.month) return;
+    var year = state.month.slice(0,4);
+    var list = combinedEntries().filter(function(e){
+      if(!e.date || e.type==='income') return false;
+      return state.summaryPeriod==='year' ? e.date.slice(0,4)===year : e.date.slice(0,7)===state.month;
+    });
+
+    document.getElementById('donutTotalLabel').textContent = state.summaryPeriod==='year' ? (year+'年 總支出') : '本月總支出';
+
+    var totals = {};
+    var total = 0;
+    list.forEach(function(e){
+      var amt = Number(e.amount)||0;
+      totals[e.category] = (totals[e.category]||0) + amt;
+      total += amt;
+    });
+
+    var cats = Object.keys(totals).sort(function(a,b){ return totals[b]-totals[a]; });
+    var donutEl = document.getElementById('donutChart');
+    var legendEl = document.getElementById('legendList');
+
+    document.getElementById('donutTotalValue').textContent = fmtMoney(total);
+
+    if(total<=0 || cats.length===0){
+      donutEl.style.background = 'var(--paper-line)';
+      legendEl.innerHTML = '<div class="empty-state">這段期間還沒有支出紀錄。</div>';
+      return;
+    }
+
+    var acc = 0;
+    var stops = cats.map(function(cat){
+      var pct = (totals[cat]/total)*100;
+      var start = acc;
+      acc += pct;
+      return catColor(cat) + ' ' + start.toFixed(2) + '% ' + acc.toFixed(2) + '%';
+    });
+    donutEl.style.background = 'conic-gradient(' + stops.join(', ') + ')';
+
+    legendEl.innerHTML = cats.map(function(cat){
+      var amt = totals[cat];
+      var pct = (amt/total)*100;
+      return '' +
+        '<div class="legend-row">' +
+          '<span class="legend-dot" style="background:'+catColor(cat)+'"></span>' +
+          '<div class="legend-name">'+cat+'</div>' +
+          '<div class="legend-amt">'+fmtMoney(amt)+'</div>' +
+          '<div class="legend-pct">'+pct.toFixed(1)+'%</div>' +
+        '</div>';
+    }).join('');
   }
 
   // ---------- persistence (local cache) ----------
@@ -513,6 +749,26 @@
         }).catch(function(){ /* stay pending, retry later */ });
     });
   }
+
+  // ---------- tabs ----------
+  var TABS = [
+    { btn:'tabBtnRecord', panel:'panelRecord' },
+    { btn:'tabBtnBudget', panel:'panelBudget' },
+    { btn:'tabBtnSummary', panel:'panelSummary' }
+  ];
+  function setTab(panelId){
+    TABS.forEach(function(t){
+      var isActive = t.panel === panelId;
+      document.getElementById(t.btn).className = 'tab-btn' + (isActive ? ' active':'');
+      document.getElementById(t.panel).className = 'tab-panel' + (isActive ? ' active':'');
+    });
+  }
+  document.getElementById('tabBtnRecord').onclick = function(){ setTab('panelRecord'); };
+  document.getElementById('tabBtnBudget').onclick = function(){ setTab('panelBudget'); renderBudgetTab(); };
+  document.getElementById('tabBtnSummary').onclick = function(){ setTab('panelSummary'); renderSummaryTab(); };
+
+  document.getElementById('btnPeriodMonth').onclick = function(){ setSummaryPeriod('month'); };
+  document.getElementById('btnPeriodYear').onclick = function(){ setSummaryPeriod('year'); };
 
   // ---------- form submit ----------
   document.getElementById('btnExpense').onclick = function(){ setType('expense'); };
