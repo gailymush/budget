@@ -510,7 +510,7 @@
   function renderMonthPicker(){
     var sel = document.getElementById('monthPicker');
     var months = allMonthsFromEntries();
-    if(!state.month) state.month = months[0];
+    if(!state.month) state.month = todayISO().slice(0,7);
     sel.innerHTML = months.map(function(m){
       var parts = m.split('-');
       var label = parts[0]+'年'+parseInt(parts[1],10)+'月';
