@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>記帳存摺</title>
+<title>Expense Passbook</title>
 
-<!-- iOS 加入主畫面設定 -->
+<!-- iOS "Add to Home Screen" settings -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="記帳存摺">
+<meta name="apple-mobile-web-app-title" content="Passbook">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1F3A34">
@@ -65,10 +65,10 @@
   .brand-mark{
     width:30px;height:30px;border:1.5px solid var(--brass);border-radius:6px;
     display:flex;align-items:center;justify-content:center;
-    color:var(--brass); font-size:15px;
+    color:var(--brass); font-size:15px; font-family:'Noto Serif TC',serif; font-weight:700;
   }
-  .brand-name{color:var(--paper); letter-spacing:.06em; font-weight:700; font-size:15px;}
-  .brand-sub{color:var(--brass-soft); font-size:11px; letter-spacing:.18em;}
+  .brand-name{color:var(--paper); letter-spacing:.04em; font-weight:700; font-size:15px;}
+  .brand-sub{color:var(--brass-soft); font-size:11px; letter-spacing:.08em;}
 
   .seal{
     width:52px;height:52px;border-radius:50%;
@@ -83,7 +83,7 @@
   }
 
   .balance-block{margin-top:26px; position:relative; z-index:1;}
-  .balance-label{color:var(--brass-soft); font-size:12px; letter-spacing:.14em; margin-bottom:6px;}
+  .balance-label{color:var(--brass-soft); font-size:12px; letter-spacing:.08em; margin-bottom:6px;}
   .balance-value{color:var(--paper); font-size:40px; font-weight:900; line-height:1;}
   .balance-value.neg{color:#E39A9A;}
   .month-picker{
@@ -101,7 +101,7 @@
     border:1px solid rgba(216,195,155,.3);
     border-radius:12px; padding:10px 12px;
   }
-  .stat-label{color:var(--brass-soft); font-size:11px; letter-spacing:.08em;}
+  .stat-label{color:var(--brass-soft); font-size:11px; letter-spacing:.04em;}
   .stat-value{color:var(--paper); font-size:18px; font-weight:700; margin-top:3px;}
   .stat-value.income{color:#9FD8B8;}
   .stat-value.expense{color:#E39A9A;}
@@ -129,7 +129,7 @@
   .type-btn{
     flex:1; padding:11px 0; text-align:center; border-radius:12px;
     border:1.5px solid var(--paper-line); background:var(--paper-soft);
-    color:var(--muted); font-weight:700; font-size:14px; letter-spacing:.04em;
+    color:var(--muted); font-weight:700; font-size:14px; letter-spacing:.02em;
     font-family:'Noto Sans TC',sans-serif;
   }
   .type-btn.active-expense{ background:var(--seal-red); border-color:var(--seal-red); color:var(--paper); }
@@ -142,7 +142,7 @@
   }
   .field{ margin-bottom:12px; }
   .field label{
-    display:block; font-size:11.5px; color:var(--muted); letter-spacing:.06em; margin-bottom:5px;
+    display:block; font-size:11.5px; color:var(--muted); letter-spacing:.03em; margin-bottom:5px;
   }
   .field input, .field textarea, .field select{
     width:100%; border:1px solid var(--paper-line); background:#fff;
@@ -163,7 +163,7 @@
   .submit-btn{
     width:100%; margin-top:6px; border:none; border-radius:12px; padding:14px 0;
     background:var(--ink-green); color:var(--paper); font-weight:700; font-size:15px;
-    letter-spacing:.06em; font-family:'Noto Serif TC',serif;
+    letter-spacing:.04em; font-family:'Noto Serif TC',serif;
   }
   .submit-btn:active{ opacity:.85; }
   .status-line{ font-size:12px; color:var(--muted); margin-top:8px; min-height:16px; text-align:center; }
@@ -235,7 +235,7 @@
     background:linear-gradient(155deg,var(--ink-green),var(--ink-green-deep));
     border-radius:var(--radius); padding:20px 18px; margin-bottom:22px; color:var(--paper);
   }
-  .save-label{ font-size:11.5px; color:var(--brass-soft); letter-spacing:.12em; }
+  .save-label{ font-size:11.5px; color:var(--brass-soft); letter-spacing:.06em; }
   .save-rate{ font-size:38px; font-weight:900; font-family:'Noto Serif TC',serif; margin-top:4px; line-height:1; }
   .save-rate.neg{ color:#E39A9A; }
   .save-sub{ display:flex; gap:22px; margin-top:14px; }
@@ -267,7 +267,7 @@
     box-shadow:inset 0 0 0 1px var(--paper-line);
   }
   .donut-hole-value{ font-family:'Roboto Mono',monospace; font-weight:700; font-size:16.5px; color:var(--ink-text); }
-  .donut-hole-label{ font-size:10.5px; color:var(--muted); margin-top:2px; }
+  .donut-hole-label{ font-size:10.5px; color:var(--muted); margin-top:2px; text-align:center; }
   .legend-card{
     background:var(--paper-soft); border:1px solid var(--paper-line); border-radius:var(--radius);
     padding:6px 16px; margin-bottom:20px;
@@ -277,7 +277,7 @@
   .legend-dot{ width:10px; height:10px; border-radius:50%; flex-shrink:0; }
   .legend-name{ flex:1; font-size:13.5px; color:var(--ink-text); }
   .legend-amt{ font-family:'Roboto Mono',monospace; font-size:13px; color:var(--ink-text); font-weight:700; }
-  .legend-pct{ font-size:11.5px; color:var(--muted); width:40px; text-align:right; flex-shrink:0; }
+  .legend-pct{ font-size:11.5px; color:var(--muted); width:44px; text-align:right; flex-shrink:0; }
 </style>
 </head>
 <body>
@@ -285,28 +285,28 @@
 <div class="hero">
   <div class="hero-top">
     <div class="brand">
-      <div class="brand-mark">冊</div>
+      <div class="brand-mark">P</div>
       <div>
-        <div class="brand-name">記帳存摺</div>
-        <div class="brand-sub" id="todayLabel">－</div>
+        <div class="brand-name">Expense Passbook</div>
+        <div class="brand-sub" id="todayLabel">–</div>
       </div>
     </div>
-    <div class="seal" id="sealStamp">－</div>
+    <div class="seal" id="sealStamp">–</div>
   </div>
 
   <div class="balance-block">
-    <div class="balance-label">本月結餘</div>
+    <div class="balance-label">Balance this month</div>
     <div class="balance-value display" id="balanceValue">$0</div>
     <select class="month-picker" id="monthPicker"></select>
   </div>
 
   <div class="sub-stats">
     <div class="stat-card">
-      <div class="stat-label">本月收入</div>
+      <div class="stat-label">Income this month</div>
       <div class="stat-value income mono" id="incomeValue">$0</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">本月支出</div>
+      <div class="stat-label">Spending this month</div>
       <div class="stat-value expense mono" id="expenseValue">$0</div>
     </div>
   </div>
@@ -315,103 +315,103 @@
 <div class="sheet">
 
   <div class="tab-bar">
-    <button type="button" class="tab-btn active" id="tabBtnRecord">記帳</button>
-    <button type="button" class="tab-btn" id="tabBtnBudget">預算上限</button>
-    <button type="button" class="tab-btn" id="tabBtnSummary">分類總覽</button>
+    <button type="button" class="tab-btn active" id="tabBtnRecord">Record</button>
+    <button type="button" class="tab-btn" id="tabBtnBudget">Budgets</button>
+    <button type="button" class="tab-btn" id="tabBtnSummary">Breakdown</button>
   </div>
 
   <div class="tab-panel active" id="panelRecord">
 
-    <div class="section-title">記一筆</div>
+    <div class="section-title">New entry</div>
     <div class="form-card">
       <div class="type-toggle">
-        <button type="button" class="type-btn active-expense" id="btnExpense">支出</button>
-        <button type="button" class="type-btn" id="btnIncome">收入</button>
+        <button type="button" class="type-btn active-expense" id="btnExpense">Expense</button>
+        <button type="button" class="type-btn" id="btnIncome">Income</button>
       </div>
 
       <div class="row-2">
         <div class="field">
-          <label>日期</label>
+          <label>Date</label>
           <input type="date" id="fDate">
         </div>
         <div class="field">
-          <label>金額</label>
+          <label>Amount</label>
           <input type="number" inputmode="decimal" step="0.01" min="0" class="amount mono" id="fAmount" placeholder="0.00">
         </div>
       </div>
 
       <div class="field">
-        <label>類別</label>
+        <label>Category</label>
         <div class="chip-group" id="categoryChips"></div>
       </div>
 
       <div class="field">
-        <label>項目</label>
-        <input type="text" id="fItem" placeholder="例如：午餐、捷運、薪水">
+        <label>Item</label>
+        <input type="text" id="fItem" placeholder="e.g. Lunch, bus fare, salary">
       </div>
 
       <div class="field">
-        <label>備註（選填）</label>
+        <label>Note (optional)</label>
         <input type="text" id="fNote" placeholder="">
       </div>
 
-      <button class="submit-btn" id="submitBtn">記一筆</button>
+      <button class="submit-btn" id="submitBtn">Add entry</button>
       <div class="status-line" id="statusLine"></div>
     </div>
 
-    <div class="section-title">明細</div>
+    <div class="section-title">Transactions</div>
     <div class="ledger" id="ledgerList">
-      <div class="empty-state">還沒有任何記錄，先在上面新增一筆吧。</div>
+      <div class="empty-state">No entries yet. Add your first one above.</div>
     </div>
 
-    <div class="section-title">設定</div>
+    <div class="section-title">Settings</div>
     <div class="settings-card">
       <div class="field">
-        <label><span class="conn-dot" id="connDot"></span>Google 試算表連結網址（Apps Script 網頁應用程式）</label>
+        <label><span class="conn-dot" id="connDot"></span>Google Sheet link (Apps Script web app URL)</label>
         <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/xxxx/exec">
       </div>
       <div class="settings-btns">
-        <button class="btn-outline" id="saveUrlBtn">儲存</button>
-        <button class="btn-outline" id="testUrlBtn">測試連線</button>
+        <button class="btn-outline" id="saveUrlBtn">Save</button>
+        <button class="btn-outline" id="testUrlBtn">Test connection</button>
       </div>
-      <div class="helper-text" id="connStatusText">尚未設定。請參考 README 建立 Google Sheet 並取得網址。</div>
+      <div class="helper-text" id="connStatusText">Not set up yet. Follow the README to create a Google Sheet and get the URL.</div>
     </div>
   </div>
 
   <div class="tab-panel" id="panelBudget">
-    <div class="section-title">儲蓄率</div>
-    <div class="cap-month-label" id="budgetMonthLabel">－</div>
+    <div class="section-title">Savings rate</div>
+    <div class="cap-month-label" id="budgetMonthLabel">–</div>
     <div class="save-card">
-      <div class="save-label">本月儲蓄率（淨儲蓄 ÷ 收入）</div>
-      <div class="save-rate display" id="saveRateValue">－</div>
+      <div class="save-label">Savings rate this month (net savings ÷ income)</div>
+      <div class="save-rate display" id="saveRateValue">–</div>
       <div class="save-sub">
-        <div>收入<b id="saveIncome">$0</b></div>
-        <div>支出<b id="saveExpense">$0</b></div>
-        <div>淨儲蓄<b id="saveNet">$0</b></div>
+        <div>Income<b id="saveIncome">$0</b></div>
+        <div>Spending<b id="saveExpense">$0</b></div>
+        <div>Net savings<b id="saveNet">$0</b></div>
       </div>
     </div>
 
-    <div class="section-title">每月預算上限</div>
+    <div class="section-title">Monthly budget limits</div>
     <div id="capCards"></div>
   </div>
 
   <div class="tab-panel" id="panelSummary">
-    <div class="section-title">支出分類總覽</div>
+    <div class="section-title">Spending by category</div>
     <div class="period-toggle">
-      <button type="button" class="type-btn active-expense" id="btnPeriodMonth">本月</button>
-      <button type="button" class="type-btn" id="btnPeriodYear">本年</button>
+      <button type="button" class="type-btn active-expense" id="btnPeriodMonth">This month</button>
+      <button type="button" class="type-btn" id="btnPeriodYear">This year</button>
     </div>
     <div class="donut-outer">
       <div class="donut" id="donutChart"></div>
       <div class="donut-hole">
         <div class="donut-hole-value" id="donutTotalValue">$0</div>
-        <div class="donut-hole-label" id="donutTotalLabel">總支出</div>
+        <div class="donut-hole-label" id="donutTotalLabel">Total spending</div>
       </div>
     </div>
     <div class="legend-card" id="legendList"></div>
   </div>
 
-  <footer>記帳存摺 · 資料儲存於你自己的 Google 試算表</footer>
+  <footer>Expense Passbook · Your data is stored in your own Google Sheet</footer>
 </div>
 
 <script>
@@ -420,13 +420,25 @@
 
   var CATS = {
     expense: [
-      {k:'飲食', e:'🍜'}, {k:'交通', e:'🚌'}, {k:'購物', e:'🛍️'}, {k:'娛樂', e:'🎬'},
-      {k:'居住', e:'🏠'}, {k:'醫療', e:'💊'}, {k:'教育', e:'📚'}, {k:'其他', e:'🗂️'}
+      {k:'Food', e:'🍜'}, {k:'Transport', e:'🚌'}, {k:'Shopping', e:'🛍️'}, {k:'Entertainment', e:'🎬'},
+      {k:'Housing', e:'🏠'}, {k:'Medical', e:'💊'}, {k:'Education', e:'📚'}, {k:'Other', e:'🗂️'}
     ],
     income: [
-      {k:'薪資', e:'💰'}, {k:'獎金', e:'🎁'}, {k:'投資', e:'📈'}, {k:'其他收入', e:'✨'}
+      {k:'Salary', e:'💰'}, {k:'Bonus', e:'🎁'}, {k:'Investment', e:'📈'}, {k:'Other Income', e:'✨'}
     ]
   };
+
+  // ---------- compatibility with older Chinese data ----------
+  // Rows saved before the translation still contain Chinese category names,
+  // column headers and income/expense labels. These maps let the app read both.
+  var LEGACY_CATS = {
+    '飲食':'Food', '交通':'Transport', '購物':'Shopping', '娛樂':'Entertainment',
+    '居住':'Housing', '醫療':'Medical', '教育':'Education', '其他':'Other',
+    '薪資':'Salary', '獎金':'Bonus', '投資':'Investment', '其他收入':'Other Income'
+  };
+  function normCat(c){ return LEGACY_CATS[c] || c; }
+  function pick(row, en, zh){ return (row[en] !== undefined && row[en] !== '') ? row[en] : row[zh]; }
+  function isIncomeLabel(t){ return t === 'Income' || t === '收入' || t === 'income'; }
 
   var state = {
     type: 'expense',
@@ -440,27 +452,35 @@
 
   // ---------- budget caps ----------
   var BUDGET_CAPS = {
-    '飲食': 900,
-    '教育': 1250,
-    '娛樂': 1400,
-    '交通': 400,
-    '購物': 250
+    'Food': 900,
+    'Education': 1250,
+    'Entertainment': 1400,
+    'Transport': 400,
+    'Shopping': 250
   };
   var CAT_COLORS = {
-    '飲食': '#D97757', '交通': '#4C8C8B', '購物': '#B08D57', '娛樂': '#7C6BA6',
-    '居住': '#5B8266', '醫療': '#C25B5B', '教育': '#3E7C8C', '其他': '#9B9481'
+    'Food': '#D97757', 'Transport': '#4C8C8B', 'Shopping': '#B08D57', 'Entertainment': '#7C6BA6',
+    'Housing': '#5B8266', 'Medical': '#C25B5B', 'Education': '#3E7C8C', 'Other': '#9B9481'
   };
   function catColor(cat){ return CAT_COLORS[cat] || '#8A8067'; }
 
   // ---------- helpers ----------
+  var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var MONTHS_SHORT = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  var WEEKDAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
   function pad(n){ return String(n).padStart(2,'0'); }
   function todayISO(){
     var d = new Date();
     return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
   }
+  function monthLabel(ym){
+    var parts = ym.split('-');
+    return MONTHS[parseInt(parts[1],10)-1] + ' ' + parts[0];
+  }
   function fmtMoney(n){
     n = Number(n)||0;
-    var fixed = Math.abs(n).toLocaleString('zh-Hant-TW', { minimumFractionDigits:2, maximumFractionDigits:2 });
+    var fixed = Math.abs(n).toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
     return (n<0?'-$':'$') + fixed;
   }
   function uid(){ return 'e' + Date.now() + Math.random().toString(36).slice(2,7); }
@@ -468,10 +488,9 @@
   // ---------- header ----------
   function renderHeader(){
     var d = new Date();
-    var weekday = ['日','一','二','三','四','五','六'][d.getDay()];
     document.getElementById('todayLabel').textContent =
-      d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 星期'+weekday;
-    document.getElementById('sealStamp').innerHTML = (d.getMonth()+1)+'月<br>'+d.getDate()+'日';
+      WEEKDAYS[d.getDay()] + ', ' + MONTHS[d.getMonth()].slice(0,3) + ' ' + d.getDate() + ', ' + d.getFullYear();
+    document.getElementById('sealStamp').innerHTML = MONTHS_SHORT[d.getMonth()] + '<br>' + d.getDate();
   }
 
   // ---------- categories ----------
@@ -512,9 +531,7 @@
     var months = allMonthsFromEntries();
     if(!state.month) state.month = todayISO().slice(0,7);
     sel.innerHTML = months.map(function(m){
-      var parts = m.split('-');
-      var label = parts[0]+'年'+parseInt(parts[1],10)+'月';
-      return '<option value="'+m+'"'+(m===state.month?' selected':'')+'>'+label+'</option>';
+      return '<option value="'+m+'"'+(m===state.month?' selected':'')+'>'+monthLabel(m)+'</option>';
     }).join('');
     sel.onchange = function(){ state.month = sel.value; renderAll(); };
   }
@@ -544,7 +561,7 @@
 
     var wrap = document.getElementById('ledgerList');
     if(list.length===0){
-      wrap.innerHTML = '<div class="empty-state">這個月還沒有記錄，記一筆開始你的存摺吧。</div>';
+      wrap.innerHTML = '<div class="empty-state">No entries this month yet. Add one to start your passbook.</div>';
       return;
     }
     wrap.innerHTML = list.map(function(e){
@@ -554,12 +571,12 @@
         '<div class="ledger-row'+(e.pending?' ledger-pending':'')+'">' +
           '<div class="ledger-date">'+d[1]+'/<b>'+d[2]+'</b></div>' +
           '<div class="ledger-main">' +
-            '<div class="ledger-cat">'+(e.category||'')+(e.pending?'（同步中）':'')+'</div>' +
+            '<div class="ledger-cat">'+(e.category||'')+(e.pending?' (syncing…)':'')+'</div>' +
             '<div class="ledger-item">'+(e.item||'')+'</div>' +
             (e.note ? '<div class="ledger-note">'+e.note+'</div>' : '') +
           '</div>' +
           '<div class="ledger-amount '+(isExpense?'expense':'income')+' mono">'+
-            (isExpense?'-':'+')+fmtMoney(Math.abs(e.amount)).replace('$','$')+
+            (isExpense?'-':'+')+fmtMoney(Math.abs(e.amount))+
           '</div>' +
         '</div>';
     }).join('');
@@ -575,8 +592,7 @@
   // ---------- budget cap tab ----------
   function renderBudgetTab(){
     if(!state.month) return;
-    var parts = state.month.split('-');
-    document.getElementById('budgetMonthLabel').textContent = parts[0]+'年'+parseInt(parts[1],10)+'月 預算狀況';
+    document.getElementById('budgetMonthLabel').textContent = monthLabel(state.month) + ' budget status';
 
     var list = combinedEntries().filter(function(e){ return e.date && e.date.slice(0,7)===state.month; });
     var income=0, expense=0;
@@ -588,10 +604,10 @@
     var rateEl = document.getElementById('saveRateValue');
     if(income>0){
       var rate = (net/income)*100;
-      rateEl.textContent = (rate>=0?'':'') + rate.toFixed(1) + '%';
+      rateEl.textContent = rate.toFixed(1) + '%';
       rateEl.className = 'save-rate display' + (rate<0 ? ' neg':'');
     } else {
-      rateEl.textContent = '－';
+      rateEl.textContent = '–';
       rateEl.className = 'save-rate display';
     }
     document.getElementById('saveIncome').textContent = fmtMoney(income);
@@ -619,7 +635,7 @@
           '</div>' +
           '<div class="cap-bar-track"><div class="cap-bar-fill" style="width:'+pct+'%; background:'+(over?'#B23B3B':catColor(cat))+'"></div></div>' +
           '<div class="cap-remain'+(over?' over':'')+'">' +
-            (over ? '已超支 '+fmtMoney(spent-cap) : '本月還可花 '+fmtMoney(remain)) +
+            (over ? 'Over budget by '+fmtMoney(spent-cap) : fmtMoney(remain)+' left to spend this month') +
           '</div>' +
         '</div>';
     }).join('');
@@ -641,7 +657,7 @@
       return state.summaryPeriod==='year' ? e.date.slice(0,4)===year : e.date.slice(0,7)===state.month;
     });
 
-    document.getElementById('donutTotalLabel').textContent = state.summaryPeriod==='year' ? (year+'年 總支出') : '本月總支出';
+    document.getElementById('donutTotalLabel').textContent = state.summaryPeriod==='year' ? (year+' total spending') : 'Spent this month';
 
     var totals = {};
     var total = 0;
@@ -659,7 +675,7 @@
 
     if(total<=0 || cats.length===0){
       donutEl.style.background = 'var(--paper-line)';
-      legendEl.innerHTML = '<div class="empty-state">這段期間還沒有支出紀錄。</div>';
+      legendEl.innerHTML = '<div class="empty-state">No spending recorded for this period yet.</div>';
       return;
     }
 
@@ -693,6 +709,8 @@
   function loadCache(){
     try{ state.entries = JSON.parse(localStorage.getItem('ledger_entries_cache')||'[]'); }catch(e){ state.entries=[]; }
     try{ state.pending = JSON.parse(localStorage.getItem('ledger_pending_cache')||'[]'); }catch(e){ state.pending=[]; }
+    // Convert any Chinese category names left in the cache
+    state.entries.concat(state.pending).forEach(function(e){ e.category = normCat(e.category); });
   }
 
   // ---------- Google Sheet sync ----------
@@ -703,28 +721,32 @@
   }
 
   function loadFromSheet(){
-    if(!state.scriptUrl){ setConn('', '尚未設定連結網址。'); return; }
-    setConn('', '同步中…');
+    if(!state.scriptUrl){ setConn('', 'No URL set yet.'); return; }
+    setConn('', 'Syncing…');
     fetch(state.scriptUrl + '?action=list')
       .then(function(r){ return r.json(); })
       .then(function(res){
         if(res && res.ok){
           state.entries = (res.data||[]).map(function(row){
             return {
-              date: row['日期'], type: row['收支']==='收入'?'income':'expense',
-              category: row['類別'], item: row['項目'], amount: Number(row['金額'])||0,
-              note: row['備註'], id: row['ID']
+              date: pick(row, 'Date', '日期'),
+              type: isIncomeLabel(pick(row, 'Type', '收支')) ? 'income' : 'expense',
+              category: normCat(pick(row, 'Category', '類別')),
+              item: pick(row, 'Item', '項目'),
+              amount: Number(pick(row, 'Amount', '金額'))||0,
+              note: pick(row, 'Note', '備註'),
+              id: row['ID']
             };
           });
           saveCache();
-          setConn('ok', '已連線，資料同步自你的 Google 試算表。');
+          setConn('ok', 'Connected. Data is synced from your Google Sheet.');
           renderAll();
         } else {
-          setConn('err', '連線成功但回傳格式異常，請檢查 Apps Script 程式碼。');
+          setConn('err', 'Connected, but the response was not in the expected format. Check your Apps Script code.');
         }
       })
       .catch(function(){
-        setConn('err', '無法連線，請確認網址正確，且部署權限為「任何人」。');
+        setConn('err', 'Could not connect. Check that the URL is correct and the deployment access is set to "Anyone".');
       });
   }
 
@@ -736,7 +758,7 @@
         method:'POST',
         headers:{'Content-Type':'text/plain;charset=utf-8'},
         body: JSON.stringify({
-          date: entry.date, type: entry.type==='income'?'收入':'支出',
+          date: entry.date, type: entry.type==='income'?'Income':'Expense',
           category: entry.category, item: entry.item, amount: entry.amount,
           note: entry.note||'', id: entry.id
         })
@@ -782,8 +804,8 @@
     var note = document.getElementById('fNote').value.trim();
     var statusLine = document.getElementById('statusLine');
 
-    if(!amount || amount<=0){ statusLine.textContent='請輸入正確的金額。'; return; }
-    if(!item){ statusLine.textContent='請輸入項目名稱。'; return; }
+    if(!amount || amount<=0){ statusLine.textContent='Enter an amount greater than 0.'; return; }
+    if(!item){ statusLine.textContent='Enter an item name.'; return; }
 
     var entry = {
       date: date, type: state.type, category: state.category,
@@ -796,7 +818,7 @@
     document.getElementById('fAmount').value='';
     document.getElementById('fItem').value='';
     document.getElementById('fNote').value='';
-    statusLine.textContent = '已加入！' + (state.scriptUrl ? '正在同步到試算表…' : '尚未設定 Google 試算表，先暫存在裝置上。');
+    statusLine.textContent = 'Entry added. ' + (state.scriptUrl ? 'Syncing to your sheet…' : 'No Google Sheet connected yet, so it\'s saved on this device for now.');
 
     if(state.scriptUrl){ trySyncPending(); }
   };
@@ -807,7 +829,7 @@
     var url = document.getElementById('scriptUrl').value.trim();
     state.scriptUrl = url;
     localStorage.setItem('ledger_script_url', url);
-    setConn('', '已儲存，正在測試連線…');
+    setConn('', 'Saved. Testing connection…');
     loadFromSheet();
   };
   document.getElementById('testUrlBtn').onclick = function(){
