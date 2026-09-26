@@ -1,27 +1,31 @@
 /**
- * 記帳存摺 — Google Apps Script 後端
+ * Expense Passbook — Google Apps Script Backend
  *
- * 使用方式：
- * 1. 建立一個新的 Google 試算表（空白活頁簿即可）。
- * 2. 上方選單「擴充功能」→「Apps Script」。
- * 3. 把這個檔案的全部內容貼進去，取代預設的程式碼，按下儲存（磁片圖示）。
- * 4. 右上角「部署」→「新增部署作業」：
- *      - 類型選「網頁應用程式」
- *      - 說明可填「記帳存摺」
- *      - 執行身分：我
- *      - 誰可以存取：任何人
- *    按「部署」，第一次會要求授權，選擇你的 Google 帳號，
- *    如果出現「Google 尚未驗證這個應用程式」的警告，
- *    點「進階」→「前往（不安全）」即可（因為這是你自己寫、自己部署的程式）。
- * 5. 部署完成後複製「網頁應用程式網址」（結尾是 /exec），
- *    貼到記帳存摺 App 的「設定」欄位裡。
+ * How to use:
+ * 1. Create a new Google Sheet (a blank spreadsheet is fine).
+ * 2. From the top menu, go to "Extensions" → "Apps Script".
+ * 3. Paste the entire contents of this file, replacing the default code,
+ *    then click Save (the disk icon).
+ * 4. In the top right, click "Deploy" → "New deployment":
+ *      - Select type: "Web app"
+ *      - Description: e.g. "Expense Passbook"
+ *      - Execute as: Me
+ *      - Who has access: Anyone
+ *    Click "Deploy". The first time, you'll be asked to authorize it —
+ *    choose your Google account.
+ *    If you see a "Google hasn't verified this app" warning,
+ *    click "Advanced" → "Go to (unsafe)". This is fine because
+ *    it's a script you wrote and deployed yourself.
+ * 5. After deployment, copy the "Web app URL" (it ends in /exec)
+ *    and paste it into the Settings field of the Expense Passbook app.
  *
- * 這支程式會自動在試算表裡建立一個叫「記帳明細」的工作表來存放資料，
- * 不需要手動建立欄位。
+ * This script automatically creates a sheet named "Transactions"
+ * in the spreadsheet to store your data, so you don't need to set up
+ * any columns manually.
  */
 
-var SHEET_NAME = '記帳明細';
-var HEADERS = ['建立時間', '日期', '收支', '類別', '項目', '金額', '備註', 'ID'];
+var SHEET_NAME = 'Transactions';
+var HEADERS = ['Created At', 'Date', 'Type', 'Category', 'Item', 'Amount', 'Note', 'ID'];
 
 function getSheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -44,13 +48,13 @@ function doGet(e) {
     var rows = [];
     for (var i = 1; i < values.length; i++) {
       var row = values[i];
-      // 略過完全空白的列
+      // Skip completely empty rows
       if (row.join('') === '') continue;
       var obj = {};
       for (var c = 0; c < headers.length; c++) {
         var val = row[c];
         if (val instanceof Date) {
-          // 日期欄位轉成 YYYY-MM-DD 字串
+          // Convert date values to a YYYY-MM-DD string
           val = Utilities.formatDate(val, Session.getScriptTimeZone(), 'yyyy-MM-dd');
         }
         obj[headers[c]] = val;
@@ -60,7 +64,7 @@ function doGet(e) {
     return jsonOutput_({ ok: true, data: rows });
   }
 
-  return jsonOutput_({ ok: true, message: '記帳存摺 API 運作中' });
+  return jsonOutput_({ ok: true, message: 'Expense Passbook API is running' });
 }
 
 function doPost(e) {
