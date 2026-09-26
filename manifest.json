@@ -1,7 +1,7 @@
 {
-  "name": "記帳存摺",
-  "short_name": "記帳存摺",
-  "description": "連接到 Google 試算表的日常記帳存摺",
+  "name": "Expense Passbook",
+  "short_name": "Passbook",
+  "description": "A daily expense passbook connected to your Google Sheet",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
